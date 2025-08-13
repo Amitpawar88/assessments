@@ -8,7 +8,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.hcl.dto.FizzBuzzResponse;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler {	
+public class GlobalExceptionHandler {
+	@ExceptionHandler(FizzBuzzException.class)
+	public ResponseEntity<FizzBuzzResponse> handleFizzBuzzException(FizzBuzzException ex) {
+		FizzBuzzResponse response = new FizzBuzzResponse();
+		response.setMessage(ex.getMessage());
+		response.setErrorReason("Insufficient storage");
+		
+		return ResponseEntity.status(HttpStatusCode.valueOf(507)).body(response);
+    }
+	
 	@ExceptionHandler(FizzException.class)
 	public ResponseEntity<FizzBuzzResponse> handleFizzException(FizzException ex) {
 		FizzBuzzResponse response = new FizzBuzzResponse();
@@ -25,14 +34,5 @@ public class GlobalExceptionHandler {
 		response.setErrorReason("Bad request");
 		
 		return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(response);
-    }
-	
-	@ExceptionHandler(FizzBuzzException.class)
-	public ResponseEntity<FizzBuzzResponse> handleFizzBuzzException(FizzBuzzException ex) {
-		FizzBuzzResponse response = new FizzBuzzResponse();
-		response.setMessage(ex.getMessage());
-		response.setErrorReason("Insufficient storage");
-		
-		return ResponseEntity.status(HttpStatusCode.valueOf(507)).body(response);
     }
 }
